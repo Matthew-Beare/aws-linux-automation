@@ -1,0 +1,34 @@
+---
+- name: Provision a key-only maintenance account in a Linux test environment
+  hosts: linux_servers
+  become: true
+  gather_facts: false
+  vars:
+    maintenance_username: laboperator
+    maintenance_ssh_public_key: "{{ lookup('ansible.builtin.env', 'ADMIN_SSH_PUBLIC_KEY') }}"
+
+  pre_tasks:
+    - name: Require an SSH public key from the operator environment
+      ansible.builtin.assert:
+        that:
+          - maintenance_ssh_public_key | length > 30
+          - maintenance_ssh_public_key is match('^ssh-(ed25519|rsa) .+')
+          - admin_group in ['sudo', 'wheel']
+        fail_msg: Set ADMIN_SSH_PUBLIC_KEY and an appropriate admin_group.
+
+  tasks:
+    - name: Ensure a named maintenance account exists and disallow password login
+      ansible.builtin.user:
+        name: "{{ maintenance_username }}"
+        groups: "{{ admin_group }}"
+        append: true
+        shell: /bin/bash
+        create_home: true
+        password_lock: true
+        state: present
+
+    - name: Configure public-key SSH authentication for maintenance account
+      ansible.posix.authorized_key:
+        user: "{{ maintenance_username }}"
+        key: "{{ maintenance_ssh_public_key }}"
+        state: present

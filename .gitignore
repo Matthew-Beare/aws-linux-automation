@@ -1,0 +1,28 @@
+# Terraform local state, credentials, and execution artifacts
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+**/*.auto.tfvars*
+**/*.tfplan
+**/crash.log
+
+# SSH keys, environment variables, and local Ansible inventory
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.*
+*.env
+*.env.*
+!.env.example
+ansible/inventory.ini
+ansible/inventory.local.ini
+**/.vault_pass*
+
+# Local caches
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store

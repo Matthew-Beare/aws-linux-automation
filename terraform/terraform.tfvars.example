@@ -1,0 +1,9 @@
+region       = "us-west-2"
+vpc_id       = "vpc-REPLACE"
+subnet_id    = "subnet-REPLACE"
+ec2_key_name = "REPLACE_WITH_YOUR_KEYPAIR_NAME"
+admin_cidr   = "198.51.100.20/32"
+instances = {
+  ubuntu = { ami_id = "ami-REPLACE_UBUNTU", instance_type = "t3.micro" }
+  rhel   = { ami_id = "ami-REPLACE_RHEL", instance_type = "t3.micro" }
+}
